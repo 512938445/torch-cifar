@@ -1,6 +1,6 @@
 import sys
 import time
-
+#进度条
 
 TOTAL_BAR_LENGTH = 80
 LAST_T = time.time()
