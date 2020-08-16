@@ -63,10 +63,10 @@ class Solver(object):
 
         # self.model = AlexNet().to(self.device)
         # self.model = VGG11().to(self.device)
-        self.model = ResNet18().to(self.device)
-        self.useLSTM = False
-        # self.model = LSTM(32*3,128).to(self.device)
-        # self.useLSTM = True
+        # self.model = ResNet18().to(self.device)
+        # self.useLSTM = False
+        self.model = LSTM(32*3,128).to(self.device)
+        self.useLSTM = True
         
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
         self.scheduler = optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=[75, 150], gamma=0.5)
@@ -80,7 +80,7 @@ class Solver(object):
         total = 0
         #逐batch训练，并显示数据
         window_titles = ["train_batch_loss"]
-        vis = Visdom_Visualization(env_forename='model1',window_titles=window_titles)
+        # vis = Visdom_Visualization(env_forename='model1',window_titles=window_titles)
         
         for batch_num, (data, target) in enumerate(self.train_loader):
             data, target = data.to(self.device), target.to(self.device)
@@ -97,7 +97,7 @@ class Solver(object):
             #累积loss
             train_loss += loss.item()
             
-            vis.update_line("train_batch_loss", batch_num, loss.item())
+            # vis.update_line("train_batch_loss", batch_num, loss.item())
             prediction = torch.max(output, 1)  
             #用来计算准确率
             total += target.size(0)
