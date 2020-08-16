@@ -69,9 +69,9 @@ class LSTM(nn.Module):
             c_t = f_t * c_t + i_t * g_t
             h_t = o_t * torch.tanh(c_t)
             
-            hidden_seq.append(h_t.unsqueeze(0))
+            hidden_seq.append(h_t.unsqueeze(0))#add dimension in 0th
         
         #reshape hidden_seq p/ retornar
-        hidden_seq = torch.cat(hidden_seq, dim=0)
-        hidden_seq = hidden_seq.transpose(0, 1).contiguous()
+        hidden_seq = torch.cat(hidden_seq, dim=0)#compose the tensor in 0th dimension
+        hidden_seq = hidden_seq.transpose(0, 1)
         return self.output(hidden_seq[:,-1,:])
