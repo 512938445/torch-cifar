@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import torch.optim as optim
 import torch.utils.data
 import torch.backends.cudnn as cudnn
@@ -14,6 +15,8 @@ from resnet import ResNet18
 from AlexNet import AlexNet
 from VGG import VGG11
 from LSTM import LSTM
+from MyDataset import MyDataset
+
 def main():
     #设置参数
     parser = argparse.ArgumentParser(description="cifar-10 with PyTorch")
@@ -48,6 +51,9 @@ class Solver(object):
         #读取数据 如何设计自己的数据集有待研究
         train_transform = transforms.Compose([transforms.RandomHorizontalFlip(), transforms.ToTensor()])
         test_transform = transforms.Compose([transforms.ToTensor()])
+        
+        #make dataset by myself
+        # train_set = MyDataset('cifar-10-batches-py/path.txt',transform=train_transform)
         train_set = torchvision.datasets.CIFAR10(root=os.getcwd(), train=True, download=False, transform=train_transform)
         self.train_loader = torch.utils.data.DataLoader(dataset=train_set, batch_size=self.train_batch_size, shuffle=True)
         test_set = torchvision.datasets.CIFAR10(root=os.getcwd(), train=False, download=False, transform=test_transform)
@@ -63,10 +69,10 @@ class Solver(object):
 
         # self.model = AlexNet().to(self.device)
         # self.model = VGG11().to(self.device)
-        # self.model = ResNet18().to(self.device)
-        # self.useLSTM = False
-        self.model = LSTM(32*3,128).to(self.device)
-        self.useLSTM = True
+        self.model = ResNet18().to(self.device)
+        self.useLSTM = False
+        # self.model = LSTM(32*3,128).to(self.device)
+        # self.useLSTM = True
         
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
         self.scheduler = optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=[75, 150], gamma=0.5)
@@ -84,8 +90,8 @@ class Solver(object):
         
         for batch_num, (data, target) in enumerate(self.train_loader):
             data, target = data.to(self.device), target.to(self.device)
+            target = target.long()#为了自己读取数据集时候用的一句话，否则类型不匹配。
             self.optimizer.zero_grad()
-            
             
             if(self.useLSTM):
                 data = data.view(-1,32,32*3)
