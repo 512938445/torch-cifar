@@ -53,7 +53,7 @@ class Solver(object):
         test_transform = transforms.Compose([transforms.ToTensor()])
         
         #make dataset by myself
-        # train_set = MyDataset('cifar-10-batches-py/path.txt',transform=train_transform)
+        # train_set = MyDataset('cifar-10-batches-py/path.txt',transform=train_transform)#自制数据集读取函数
         train_set = torchvision.datasets.CIFAR10(root=os.getcwd(), train=True, download=False, transform=train_transform)
         self.train_loader = torch.utils.data.DataLoader(dataset=train_set, batch_size=self.train_batch_size, shuffle=True)
         test_set = torchvision.datasets.CIFAR10(root=os.getcwd(), train=False, download=False, transform=test_transform)
@@ -70,7 +70,7 @@ class Solver(object):
         # self.model = AlexNet().to(self.device)
         # self.model = VGG11().to(self.device)
         self.model = ResNet18().to(self.device)
-        self.useLSTM = False
+        self.useLSTM = False#不用 LSTM的时候 把这个标志置为False
         # self.model = LSTM(32*3,128).to(self.device)
         # self.useLSTM = True
         
